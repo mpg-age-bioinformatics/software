@@ -2,10 +2,10 @@
 
 set -e
 
-TOOL=$( echo ${DOCKER_TAG}| awk -F- '{ print $1}' )
-VERSION=$( echo ${DOCKER_TAG}| awk -F- '{ print $2}' )
+TOOL=$( echo ${DOCKER_TAG} | awk -F- '{ print $1}' )
+VER=$( echo ${DOCKER_TAG} | awk -F- '{ print $2}' )
 
 cd ${TOOL}/${VERSION}
 
-docker build -t mpgagebioinformatics/${TOOL}:${VERSION} .
-docker push mpgagebioinformatics/${TOOL}:${VERSION}
+docker build -t mpgagebioinformatics/${TOOL}:${VER} .
+docker push mpgagebioinformatics/${TOOL}:${VER}
