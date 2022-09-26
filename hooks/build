@@ -3,9 +3,9 @@
 set -e
 
 TOOL=$( echo ${DOCKER_TAG} | awk -F- '{ print $1}' )
-VER=$( echo ${DOCKER_TAG} | awk -F- '{ print $2}' )
+DOCKER_TAG=$( echo ${DOCKER_TAG} | awk -F- '{ print $2}' )
 
-cd ${TOOL}/${VER}
+cd ${TOOL}/${DOCKER_TAG}
 
-docker build -t mpgagebioinformatics/${TOOL}:${VER} .
-docker push mpgagebioinformatics/${TOOL}:${VER}
+docker build -t mpgagebioinformatics/${TOOL}:${DOCKER_TAG} .
+docker push mpgagebioinformatics/${TOOL}:${DOCKER_TAG}
