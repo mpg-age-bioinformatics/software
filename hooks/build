@@ -2,11 +2,11 @@
 
 set -e
 
-tagStart=$(expr index "$IMAGE_NAME" :)
-repoName=${IMAGE_NAME:0:tagStart-1}
-tool=$(echo ${repoName} | awk -F/ '{print $2}' )
+#tagStart=$(expr index "$IMAGE_NAME" :)
+#repoName=${IMAGE_NAME:0:tagStart-1}
+tool=$(echo ${DOCKER_REPO} | awk -F/ '{print $3}' )
 
-cd ${DOCKER_REPO}/${DOCKER_TAG}
+cd ${tool}/${DOCKER_TAG}
 
-docker build -t mpgagebioinformatics/${IMAGE_NAME} .
-docker push mpgagebioinformatics/${IMAGE_NAME}
+docker build -t ${DOCKER_REPO}:${DOCKER_TAG} .
+docker push ${DOCKER_REPO}:${DOCKER_TAG}
