@@ -2,8 +2,6 @@
 
 set -e
 
-#tagStart=$(expr index "$IMAGE_NAME" :)
-#repoName=${IMAGE_NAME:0:tagStart-1}
 tool=$(echo ${DOCKER_REPO} | awk -F/ '{print $3}' )
 
 cd ${tool}/${DOCKER_TAG}
