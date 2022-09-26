@@ -5,7 +5,7 @@ set -e
 TOOL=$( echo ${DOCKER_TAG} | awk -F- '{ print $1}' )
 VER=$( echo ${DOCKER_TAG} | awk -F- '{ print $2}' )
 
-cd ${TOOL}/${VERSION}
+cd ${TOOL}/${VER}
 
 docker build -t mpgagebioinformatics/${TOOL}:${VER} .
 docker push mpgagebioinformatics/${TOOL}:${VER}
