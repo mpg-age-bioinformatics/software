@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+
+TOOL=$( echo ${DOCKER_TAG}| awk -F- '{ print $1}' )
+VERSION=$( echo ${DOCKER_TAG}| awk -F- '{ print $2}' )
+
+cd ${TOOL}/${VERSION}
+
+docker build -t mpgagebioinformatics/${TOOL}:${VERSION} .
+docker push mpgagebioinformatics/${TOOL}:${VERSION}
