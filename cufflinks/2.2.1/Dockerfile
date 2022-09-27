@@ -10,7 +10,7 @@ echo "deb http://security.debian.org/debian-security bullseye-security main cont
 echo "deb-src http://security.debian.org/debian-security bullseye-security main contrib non-free" >> /etc/apt/sources.list
 
 RUN apt-get update && apt-get -yq dist-upgrade && \
-  apt-get install -yq wget tar pigz curl && \
+  apt-get install -yq wget tar pigz curl ncftp && \
   apt-get clean && rm -rf /var/lib/apt/lists/* 
 
 RUN wget http://cole-trapnell-lab.github.io/cufflinks/assets/downloads/cufflinks-2.2.1.Linux_x86_64.tar.gz && \
