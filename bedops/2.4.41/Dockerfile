@@ -15,5 +15,5 @@ RUN apt-get update && apt-get -yq dist-upgrade && \
 
 Run mkdir bedops; cd bedops; wget https://github.com/bedops/bedops/releases/download/v2.4.41/bedops_linux_x86_64-v2.4.41.tar.bz2 ; tar jxvf bedops_linux_x86_64-v2.4.41.tar.bz2
 
-ENV PATH bedops/bin:$PATH
+ENV PATH /bedops/bin:$PATH
 
