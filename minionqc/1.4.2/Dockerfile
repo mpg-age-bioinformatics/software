@@ -32,5 +32,6 @@ RUN Rscript -e 'library(viridis)'
 RUN Rscript -e 'install.packages("yaml", repos="https://cloud.r-project.org/", dependencies = TRUE)'
 RUN Rscript -e 'library(yaml)'
 
-RUN wget https://raw.githubusercontent.com/roblanf/minion_qc/master/MinIONQC.R -O MinIONQC.R
-RUN chmod u+x MinIONQC.R
+RUN wget https://raw.githubusercontent.com/roblanf/minion_qc/master/MinIONQC.R -O /bin/MinIONQC.R
+RUN chmod u+x /bin/MinIONQC.R
+RUN MinIONQC.R --help
