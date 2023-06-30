@@ -10,8 +10,8 @@ echo "deb http://security.debian.org/debian-security bullseye-security main cont
 echo "deb-src http://security.debian.org/debian-security bullseye-security main contrib non-free" >> /etc/apt/sources.list
 
 RUN apt-get update && apt-get -yq dist-upgrade && \
-  apt-get install -yq wget && \
-  apt-get clean && rm -rf /var/lib/apt/lists/* 
+  apt-get install -yq curl && \
+  apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN wget  http://www.microbesonline.org/fasttree/FastTree --no-cookies -O /bin/FastTree
-RUN chmod u+x /bin/FastTree
+RUN curl -o /bin/FastTree http://www.microbesonline.org/fasttree/FastTree && \
+    chmod u+x /bin/FastTree
