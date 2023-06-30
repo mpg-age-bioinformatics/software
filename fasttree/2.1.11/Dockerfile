@@ -15,3 +15,4 @@ RUN apt-get update && apt-get -yq dist-upgrade && \
 
 Run wget http://www.microbesonline.org/fasttree/FastTree
 Run chmod u+x FastTree
+Run mv FastTree /bin/
