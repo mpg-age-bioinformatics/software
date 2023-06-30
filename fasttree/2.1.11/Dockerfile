@@ -13,5 +13,5 @@ RUN apt-get update && apt-get -yq dist-upgrade && \
   apt-get install -yq wget && \
   apt-get clean && rm -rf /var/lib/apt/lists/* 
 
-RUN wget http://www.microbesonline.org/fasttree/FastTree  -O /bin/FastTree
+RUN wget --load-cookies http://www.microbesonline.org/fasttree/FastTree  -O /bin/FastTree
 RUN chmod u+x /bin/FastTree
