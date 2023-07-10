@@ -8,4 +8,5 @@ RUN yum install bzip2 bzip2-devel -y
 RUN git clone --recursive https://github.com/jts/nanopolish.git
 WORKDIR /nanopolish
 RUN make all
-CMD ./nanopolish
+WORKDIR / 
+ENV PATH /nanopolish:$PATH
