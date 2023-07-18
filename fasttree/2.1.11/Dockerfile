@@ -14,7 +14,7 @@ RUN apt-get update && apt-get -yq dist-upgrade && \
   apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
-RUN curl -o /bin/FastTree http://www.microbesonline.org/fasttree/FastTree && \
-    curl -o /bin/FastTreeMP http://www.microbesonline.org/fasttree/FastTreeMP  && \
-    chmod u+x /bin/FastTree && \
-    chmod u+x /bin/FastTreeMP
+RUN curl -o /usr/bin/FastTree http://www.microbesonline.org/fasttree/FastTree && \
+    curl -o /usr/bin/FastTreeMP http://www.microbesonline.org/fasttree/FastTreeMP  && \
+    chmod ug+x /usr/bin/FastTree && \
+    chmod ug+x /usr/bin/FastTreeMP
