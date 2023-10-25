@@ -39,9 +39,10 @@ RUN wget https://www.repeatmasker.org/RepeatMasker/RepeatMasker-4.1.5.tar.gz && 
   cd /usr/local && \
   tar -zxvf RepeatMasker-4.1.5.tar.gz
 
-RUN wget https://www.dfam.org/releases/Dfam_3.7/families/Dfam.h5.gz && \
-  gunzip Dfam.h5.gz && \
-  mv Dfam.h5 /usr/local/RepeatMasker/Libraries
+# this is an 89 GB file and won't be used by default on the image
+# RUN wget https://www.dfam.org/releases/Dfam_3.7/families/Dfam.h5.gz && \
+#   gunzip Dfam.h5.gz && \
+#   mv Dfam.h5 /usr/local/RepeatMasker/Libraries
 
 RUN cd /usr/local/RepeatMasker && \
   perl ./configure -trf_prgm=/usr/local/bin/trf --hmmer_dir=`which nhmmscan`
