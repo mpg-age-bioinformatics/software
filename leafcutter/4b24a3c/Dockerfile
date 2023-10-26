@@ -81,10 +81,10 @@ RUN conda install -y -n leafcutter -c bioconda \
     regtools=0.6.0 \
     bioconductor-biobase \
     bioconductor-dirichletmultinomial
-RUN echo ". /opt/conda/etc/profile.d/conda.sh" > ~/.bashrc && \
-  echo "conda activate leafcutter" >> ~/.bashrc
-RUN /opt/conda/envs/leafcutter/bin/R -e "install.packages(c('Rcpp','rstantools', 'foreach', 'ggplot2', 'R.utils', 'gridExtra', 'reshape2', 'Hmisc', 'dplyr', 'doMC', 'optparse', 'shiny', 'intervals', 'shinycssloaders', 'DT', 'gtable', 'shinyjs', 'TailRank', 'magrittr', 'stringr', 'BH'), repos='http://cran.us.r-project.org')"
-RUN cd /app/leafcutter/leafcutter && \
-  /opt/conda/envs/leafcutter/bin/R CMD INSTALL --build .
-ENV PATH=/opt/conda/envs/leafcutter/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-ENV CONDA_DEFAULT_ENV=leafcutter 
+# RUN echo ". /opt/conda/etc/profile.d/conda.sh" > ~/.bashrc && \
+#   echo "conda activate leafcutter" >> ~/.bashrc
+# RUN /opt/conda/envs/leafcutter/bin/R -e "install.packages(c('Rcpp','rstantools', 'foreach', 'ggplot2', 'R.utils', 'gridExtra', 'reshape2', 'Hmisc', 'dplyr', 'doMC', 'optparse', 'shiny', 'intervals', 'shinycssloaders', 'DT', 'gtable', 'shinyjs', 'TailRank', 'magrittr', 'stringr', 'BH'), repos='http://cran.us.r-project.org')"
+# RUN cd /app/leafcutter/leafcutter && \
+#   /opt/conda/envs/leafcutter/bin/R CMD INSTALL --build .
+# ENV PATH=/opt/conda/envs/leafcutter/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# ENV CONDA_DEFAULT_ENV=leafcutter 
