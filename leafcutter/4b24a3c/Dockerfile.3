@@ -1,0 +1,149 @@
+FROM debian:bullseye-slim
+
+LABEL maintainer "bioinformatics@age.mpg.de"
+
+RUN echo "deb http://deb.debian.org/debian/ bullseye main contrib non-free" >> /etc/apt/sources.list && \
+echo "deb-src http://deb.debian.org/debian/ bullseye main contrib non-free" >> /etc/apt/sources.list && \
+echo "deb http://deb.debian.org/debian/ bullseye-updates main contrib non-free" >> /etc/apt/sources.list && \
+echo "deb-src http://deb.debian.org/debian/ bullseye-updates main contrib non-free" >> /etc/apt/sources.list && \
+echo "deb http://security.debian.org/debian-security bullseye-security main contrib non-free" >> /etc/apt/sources.list && \
+echo "deb-src http://security.debian.org/debian-security bullseye-security main contrib non-free" >> /etc/apt/sources.list
+
+RUN apt-get update && apt-get -yq dist-upgrade && \
+  apt-get install -yq \
+    wget \
+    tar \
+    pigz \
+    curl \
+    bzip2 \
+    build-essential \
+    libncurses-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    liblzma-dev \
+    git \
+    cmake \
+    gfortran \
+    libreadline-dev \
+    libx11-dev \
+    xorg-dev \
+    libpcre3-dev \
+    libcurl4-openssl-dev \
+    zip \
+    unzip \
+    libxml2-dev \
+    libssl-dev \
+    libudunits2-dev \
+    libv8-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    libfreetype6-dev \
+    libpng-dev \
+    libtiff5-dev \
+    libjpeg-dev \
+    libgit2-dev \
+    libtbb-dev && \
+  apt-get clean && rm -rf /var/lib/apt/lists/* 
+
+RUN wget https://www.python.org/ftp/python/2.7.18/Python-2.7.18.tgz && \
+  tar zxvf Python-2.7.18.tgz && \
+  cd Python-2.7.18 && \
+  ./configure && \
+  make && \
+  make install 
+
+RUN wget https://github.com/samtools/samtools/releases/download/1.18/samtools-1.18.tar.bz2 && \
+  tar -xvf samtools-1.18.tar.bz2 && \
+  cd samtools-1.18 && \
+  ./configure && make && make install
+
+RUN git clone https://github.com/griffithlab/regtools && \
+  cd regtools/ && \
+  mkdir build && \
+  cd build/ && \
+  cmake .. && \
+  make && \
+  cp regtools /bin/
+
+RUN curl -s "https://get.sdkman.io" | bash
+RUN /bin/bash -c 'source "/root/.sdkman/bin/sdkman-init.sh" && sdk install java 21-graal' 
+
+# RUN wget https://cloud.r-project.org/src/base/R-3/R-3.6.3.tar.gz && \
+#   tar -zxvf R-3.6.3.tar.gz && \
+#   cd R-3.6.3 && \
+#   ./configure && \
+#   make -j9 && \
+#   make install
+
+# ENV tbb_os=linux
+
+RUN wget https://cloud.r-project.org/src/base/R-4/R-4.3.1.tar.gz && \
+  tar -zxvf R-4.3.1.tar.gz && \
+  cd R-4.3.1 && \
+  ./configure && \
+  make -j9 && \
+  make install
+
+RUN apt-get update && apt-get -yq dist-upgrade && \
+  apt-get install -yq \
+    libsodium-dev \
+    libgdal-dev && \
+  apt-get clean && rm -rf /var/lib/apt/lists/* 
+
+RUN R --vanilla -e "install.packages(c('Rcpp'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && R --vanilla -e "library(Rcpp)"
+RUN R --vanilla -e "install.packages(c('RcppParallel'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && R --vanilla -e "library(RcppParallel)"
+RUN R --vanilla -e "install.packages(c('StanHeaders' ),dependencies=TRUE, repos='http://cran.rstudio.com/')" && R --vanilla -e "library(StanHeaders)"
+RUN R --vanilla -e "install.packages(c('ggplot2'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && R --vanilla -e "library(ggplot2)"
+RUN R --vanilla -e "install.packages(c('inline'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && R --vanilla -e "library(inline)"
+RUN R --vanilla -e "install.packages(c('gridExtra'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && R --vanilla -e "library(gridExtra)"
+RUN R --vanilla -e "install.packages(c('loo'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && R --vanilla -e "library(loo)"
+RUN R --vanilla -e "install.packages(c('pkgbuild'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && R --vanilla -e "library(pkgbuild)"
+RUN R --vanilla -e "install.packages(c('V8'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && R --vanilla -e "library(V8)"
+RUN R --vanilla -e "install.packages(c('RcppEigen'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && R --vanilla -e "library(RcppEigen)"
+RUN R --vanilla -e "install.packages(c('BH'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && R --vanilla -e "library(BH)"
+RUN R --vanilla -e "install.packages(c('devtools'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && R --vanilla -e "library(devtools)"
+RUN R --vanilla -e "install.packages(c('rstan'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && R --vanilla -e "library(rstan)"
+RUN R --vanilla -e "install.packages(c('latticeExtra'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && R --vanilla -e "library(latticeExtra)"
+
+RUN wget https://cran.r-project.org/src/contrib/Archive/Hmisc/Hmisc_4.8-0.tar.gz && \
+  R -e "install.packages(c('Hmisc'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && \
+  R -e 'remove.packages("Hmisc")' && \ 
+  R --vanilla -e "install.packages('./Hmisc_4.8-0.tar.gz',dependencies=TRUE, repos = NULL, type='source')" && \
+  R --vanilla -e "library(Hmisc)"
+
+# RUN R --vanilla -e "install.packages(c('polspline'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && \
+#   R --vanilla -e "library(polspline)"
+
+# RUN wget https://cran.r-project.org/src/contrib/survival_3.5-7.tar.gz && \
+#   R --vanilla -e 'remove.packages("survival")' && \
+#   R --vanilla -e "install.packages('./survival_3.5-7.tar.gz', dependencies=TRUE, repos = NULL, type='source')" && \
+#   R --vanilla -e "library(survival)"
+
+
+# RUN wget https://cran.r-project.org/src/contrib/Archive/rms/rms_6.5-0.tar.gz && \
+#   R --vanilla -e "install.packages('./rms_6.5-0.tar.gz', dependencies=TRUE, repos = NULL, type='source')" && \
+#   R --vanilla -e "library(rms)"
+
+# # RUN R -e "install.packages(c('Hmisc'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && \
+# #   R -e "library(Hmisc)"
+# # RUN R -e "install.packages(c('qreport'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && \
+# #   R -e "library(qreport)"
+
+# RUN R --vanilla -e "install.packages(c('BiocManager'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && R --vanilla -e "library(BiocManager)"
+# RUN R --vanilla -e 'BiocManager::install("DirichletMultinomial")' && R --vanilla -e "library(DirichletMultinomial)"
+# RUN R --vanilla -e "install.packages(c('TailRank'),dependencies=TRUE, repos='http://cran.rstudio.com/')" && R --vanilla -e "library(TailRank)"
+
+# # 'Hmisc', 'DirichletMultinomial', 'TailRank'
+
+# # RUN R -e 'remove.packages("rstan")' && \
+# #   wget https://github.com/stan-dev/rstan/archive/refs/tags/v2.21.1.tar.gz && \
+# #   tar -zxvf /v2.21.1.tar.gz && \
+# #   cd /rstan-2.21.1/rstan && \
+# #   R CMD INSTALL ./rstan && \
+# #   R -e "library(rstan)"
+
+# RUN R --vanilla -e 'devtools::install_github("davidaknowles/leafcutter/leafcutter")' && R -e "library(leafcutter)"
+
+# # docker buildx build --platform linux/amd64 .
+
+

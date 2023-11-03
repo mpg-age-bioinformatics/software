@@ -1,0 +1,27 @@
+FROM jupyter/datascience-notebook:latest
+
+# Configure Leafcutter environment
+RUN conda create -y --prefix=leafcutter
+RUN source activate /home/jovyan/leafcutter
+RUN conda install -y r-base=3.6
+RUN conda install -c r r-rstan
+RUN conda install -c bioconda samtools
+RUN conda install -c bioconda regtools
+RUN conda install -c conda-forge r-devtools
+RUN conda install -c bioconda bioconductor-biobase
+RUN conda install -c bioconda bioconductor-dirichletmultinomial
+RUN conda install r-recommended r-irkernel
+RUN conda install -c conda-forge r-r.utils
+RUN conda install -c conda-forge r-hmisc
+RUN conda install -c conda-forge r-domc
+RUN conda install -c conda-forge r-optparse
+RUN conda install -c conda-forge r-intervals
+RUN conda install -c conda-forge r-shinycssloaders
+RUN conda install -c r r-bh
+RUN conda install -c bioconda bioconductor-biobase
+RUN R -e 'devtools::install_github("davidaknowles/leafcutter/leafcutter")'
+
+# Make this environment availble to the jupyter notebook as a kernel
+RUN R -e 'IRkernel::installspec(name = "leafcutter", displayname = "R 3.6 / Leafcutter")'
+
+RUN source deactivate

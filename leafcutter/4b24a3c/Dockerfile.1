@@ -1,0 +1,118 @@
+FROM debian:bullseye-slim
+
+LABEL maintainer "bioinformatics@age.mpg.de"
+
+RUN echo "deb http://deb.debian.org/debian/ bullseye main contrib non-free" >> /etc/apt/sources.list && \
+echo "deb-src http://deb.debian.org/debian/ bullseye main contrib non-free" >> /etc/apt/sources.list && \
+echo "deb http://deb.debian.org/debian/ bullseye-updates main contrib non-free" >> /etc/apt/sources.list && \
+echo "deb-src http://deb.debian.org/debian/ bullseye-updates main contrib non-free" >> /etc/apt/sources.list && \
+echo "deb http://security.debian.org/debian-security bullseye-security main contrib non-free" >> /etc/apt/sources.list && \
+echo "deb-src http://security.debian.org/debian-security bullseye-security main contrib non-free" >> /etc/apt/sources.list
+
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 
+ENV PATH=/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+CMD ["bash"]   
+RUN /bin/sh -c set -x && \
+    apt-get update --fix-missing && \
+    apt-get install -y --no-install-recommends \
+           bzip2 \
+           ca-certificates \
+           git \
+           libglib2.0-0 \
+           libsm6 \
+           libxcomposite1 \
+           libxcursor1 \
+           libxdamage1 \
+           libxext6 \
+           libxfixes3 \
+           libxi6 \
+           libxinerama1 \
+           libxrandr2 \
+           libxrender1 \
+           mercurial \
+           openssh-client \
+           procps \
+           subversion \
+           wget && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    UNAME_M="$(uname -m)" && \
+    if [ "${UNAME_M}" = "x86_64" ]; \
+      then ANACONDA_URL="https://repo.anaconda.com/archive/Anaconda3-2023.03-1-Linux-x86_64.sh"; \
+      SHA256SUM="95102d7c732411f1458a20bdf47e4c1b0b6c8a21a2edfe4052ca370aaae57bab"; \
+    elif [ "${UNAME_M}" = "s390x" ]; \
+      then ANACONDA_URL="https://repo.anaconda.com/archive/Anaconda3-2023.03-1-Linux-s390x.sh"; \
+      SHA256SUM="5af1406c6350b4ba6839c49faa32a3c90f2b9845a03c35843f118dd9dd013421"; \
+    elif [ "${UNAME_M}" = "aarch64" ]; \
+      then ANACONDA_URL="https://repo.anaconda.com/archive/Anaconda3-2023.03-1-Linux-aarch64.sh"; \
+      SHA256SUM="54e600faa2af63a25717af30ecaddf1ee428cdfebd3721a70f41462e232e8153"; \
+    elif [ "${UNAME_M}" = "ppc64le" ]; \
+      then ANACONDA_URL="https://repo.anaconda.com/archive/Anaconda3-2023.03-1-Linux-ppc64le.sh"; \
+      SHA256SUM="a31f2d6da83534cff7c994403cc11fa634b31fcd10eb4153d00233345ee084b2"; \
+    fi && \
+    wget "${ANACONDA_URL}" -O anaconda.sh -q && \
+    echo "${SHA256SUM} anaconda.sh" > shasum && \
+    sha256sum --check --status shasum && \
+    /bin/bash anaconda.sh -b -p /opt/conda && \
+    rm anaconda.sh shasum && \
+    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    echo "conda activate base" >> ~/.bashrc && \
+    find /opt/conda/ -follow -type f -name '*.a' -delete && \
+    find /opt/conda/ -follow -type f -name '*.js.map' -delete && \
+    /opt/conda/bin/conda clean -afy
+CMD ["/bin/bash"]
+WORKDIR /app  
+RUN apt-get -y update && apt-get install less
+RUN git clone https://github.com/davidaknowles/leafcutter && \
+  cd leafcutter && \
+  git checkout 4b24a3c32b9eae7c91f63af80543abf168777285 #commit as of May 2023
+RUN conda create -n leafcutter --force
+RUN conda install -n leafcutter -c "r" r-essentials
+RUN conda install -y -n leafcutter -c \
+    conda-forge \
+    r-rstan=2.21.2 \
+    r-stanheaders=2.21.0_7 \
+    r-devtools \
+    r-tidyverse
+RUN conda install -y -n leafcutter -c bioconda \
+    samtools \
+    regtools=0.6.0 \
+    bioconductor-biobase \
+    bioconductor-dirichletmultinomial
+RUN apt-get install -y --no-install-recommends \
+      libgsl-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    ln -s /usr/lib/x86_64-linux-gnu/libgsl.so /usr/lib/x86_64-linux-gnu/libgsl.so.23 && \
+    ln -s /opt/conda/envs/leafcutter/lib/libicuuc.so /opt/conda/envs/leafcutter/lib/libicuuc.so.58
+RUN echo ". /opt/conda/etc/profile.d/conda.sh" > ~/.bashrc && \
+  echo "conda activate leafcutter" >> ~/.bashrc
+# RUN conda install -y -n leafcutter -c bioconda \
+#   bioconductor-
+RUN conda install -y -n leafcutter -c \
+    conda-forge \
+    r-ggplot2 \
+    r-gridextra \
+    r-reshape2 \
+    r-hmisc \
+    r-dplyr \
+    r-stringr \
+    r-shiny \
+    r-shinyjs \
+    r-dt \
+    r-intervals \
+    r-shinycssloaders \
+    r-gtable
+RUN ln -s /opt/conda/envs/leafcutter/lib/libopenblasp-r0.3.24.so /opt/conda/envs/leafcutter/lib/libRlapack.so
+RUN /opt/conda/envs/leafcutter/bin/R -e "install.packages(c('Rcpp','rstantools', 'foreach', 'R.utils', 'doMC', 'optparse', 'intervals', 'shinycssloaders', 'TailRank', 'magrittr', 'BH'), repos='http://cran.us.r-project.org')"
+ENV PATH=/opt/conda/envs/leafcutter/bin:/opt/conda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENV CONDA_DEFAULT_ENV=leafcutter 
+RUN cd /opt/conda/envs/leafcutter/lib/R/modules/ && ln -s lapack.so libRlapack.so
+# RUN cd /app/leafcutter/leafcutter && /opt/conda/envs/leafcutter/bin/R CMD INSTALL --build .
+
+
+# RUN /opt/conda/envs/leafcutter/bin/R -e "install.packages(c('Rcpp','rstantools', 'foreach', 'ggplot2', 'R.utils', 'gridExtra', 'reshape2', 'Hmisc', 'dplyr', 'doMC', 'optparse', 'shiny', 'intervals', 'shinycssloaders', 'DT', 'gtable', 'shinyjs', 'TailRank', 'magrittr', 'stringr', 'BH'), repos='http://cran.us.r-project.org')"
+
+# RUN /opt/conda/envs/leafcutter/bin/R -e "install.packages(c( 'Hmisc', '), repos='http://cran.us.r-project.org')"

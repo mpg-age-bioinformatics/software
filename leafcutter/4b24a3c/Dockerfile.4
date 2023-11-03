@@ -1,0 +1,166 @@
+FROM ubuntu:focal
+MAINTAINER Alexander Paul <alex.paul@wustl.edu>
+
+LABEL \
+    description="Image for use with LeafCutter https://github.com/davidaknowles/leafcutter"
+
+RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    apt-utils \
+    build-essential \
+    bzip2 \
+    cmake \
+    gcc \
+    gfortran \
+    git \
+    libcurl4-openssl-dev \
+    libbz2-dev \
+    libgsl-dev \
+    libjpeg-dev \
+    liblzma-dev \
+    libpcre2-dev \
+    libpng-dev \
+    libreadline-dev \
+    libssl-dev \
+    libv8-dev \
+    libxml2-dev \
+    make \
+    ncurses-dev \
+    python2 \
+    wget \
+    zlib1g-dev \
+    libtbb-dev
+
+########
+#HTSlib#
+########
+ENV HTSLIB_INSTALL_DIR=/opt/htslibA
+ENV HTSLIB_VERSION="1.10.2"
+
+WORKDIR /tmp
+RUN wget https://github.com/samtools/htslib/releases/download/${HTSLIB_VERSION}/htslib-${HTSLIB_VERSION}.tar.bz2 && \
+    tar --bzip2 -xvf htslib-${HTSLIB_VERSION}.tar.bz2
+
+WORKDIR /tmp/htslib-${HTSLIB_VERSION}
+RUN ./configure  --enable-plugins --prefix=$HTSLIB_INSTALL_DIR && \
+    make && \
+    make install && \
+    cp $HTSLIB_INSTALL_DIR/lib/libhts.so* /usr/lib/
+WORKDIR /tmp
+RUN rm -rf /tmp/*
+
+##########
+#Samtools#
+##########
+ENV SAMTOOLS_INSTALL_DIR=/opt/samtools
+ENV SAMTOOLS_VERSION="1.10"
+RUN wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2 && \
+    tar --bzip2 -xf samtools-${SAMTOOLS_VERSION}.tar.bz2
+
+WORKDIR /tmp/samtools-${SAMTOOLS_VERSION}
+RUN ./configure --with-htslib=$HTSLIB_INSTALL_DIR --prefix=$SAMTOOLS_INSTALL_DIR && \
+    make && \
+    make install
+
+WORKDIR /
+RUN rm -rf /tmp/*
+
+#######
+#tabix#
+#######
+RUN ln -s $HTSLIB_INSTALL_DIR/bin/tabix /usr/bin/tabix
+
+##########
+#Regtools#
+##########
+WORKDIR /tmp
+RUN git clone https://github.com/griffithlab/regtools && \
+    cd regtools/ && \
+    mkdir build && \
+    cd build/ && \
+    cmake .. && \
+    make && \
+    mkdir /opt/regtools/ && \
+    mv regtools /opt/regtools/
+
+#####
+# R #
+#####
+ENV R_INSTALL_DIR=/usr/local/
+ENV R_VERSION="4.3.2"
+
+RUN wget https://cran.r-project.org/src/base/R-4/R-${R_VERSION}.tar.gz && \
+    tar -zxvf R-${R_VERSION}.tar.gz && \
+    cd R-${R_VERSION} && \
+    ./configure --prefix=${R_INSTALL_DIR} --with-x=no && \
+    make && \
+    make install
+
+#########################
+# R and python packages #
+#########################
+
+RUN apt-get install -y libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev
+RUN R --vanilla -e 'install.packages(c("devtools"), repos = "http://cran.us.r-project.org")' &&  R --vanilla -e 'library(devtools)'
+RUN R --vanilla -e 'install.packages(c("BiocManager"), repos = "http://cran.us.r-project.org")' && R --vanilla -e 'library(BiocManager)'
+RUN R --vanilla -e 'install.packages(c( "remotes"), repos = "http://cran.us.r-project.org")' && R --vanilla -e 'library(remotes)'
+RUN R --vanilla -e 'install.packages(c("rstan"), repos = "http://cran.us.r-project.org")' && R --vanilla -e 'library(rstan)'
+RUN R --vanilla -e 'BiocManager::install(c("Biobase"))' && R --vanilla -e 'library(Biobase)'
+RUN R --vanilla -e 'BiocManager::install(c("DirichletMultinomial"))' && R --vanilla -e 'library(DirichletMultinomial)'
+RUN R --vanilla -e 'BiocManager::install(c( "Hmisc"))' && R --vanilla -e 'library(Hmisc)'
+
+# RUN git clone https://github.com/oneapi-src/oneTBB.git && \
+#     cd oneTBB && \
+#     mkdir build && cd build && \
+#     cmake -DTBB_TEST=OFF .. && \
+#     cmake --build . & \
+#     cmake --install .
+# RUn wget https://github.com/oneapi-src/oneTBB/releases/download/v2021.10.0/oneapi-tbb-2021.10.0-lin.tgz && \
+#     tar zxvf oneapi-tbb-2021.10.0-lin.tgz && \
+#     cd oneapi-tbb-2021.10.0 && \
+#     cmake .
+#     # && \
+    # cmake --build .. && \
+    # cmake --install ..
+# RUN wget https://github.com/oneapi-src/oneTBB/archive/refs/tags/2020_U3.tar.gz && \
+#     tar -zxvf 2020_U3.tar.gz && \
+#     cd oneTBB-2020_U3 && \
+#     make && \
+#     make install
+    # cd build && \
+    # cmake -DTBB_TEST=OFF .. && \
+    # cmake --build . && \
+    # cmake --install .
+
+# RUN R -e 'remove.packages("rstan"); Sys.setenv(DOWNLOAD_STATIC_LIBV8 = 1); install.packages("rstan", repos = "https://cloud.r-project.org/", dependencies = TRUE)' && R -e "library(rstan)"
+# #   wget https://github.com/stan-dev/rstan/archive/refs/tags/v2.2.0.tar.gz && \
+# #   tar -zxvf v2.2.0.tar.gz && \
+# #   cd ./rstan-2.2.0/rstan && \
+# #   R CMD INSTALL ./rstan && \
+
+RUN R --vanilla -e 'remove.packages(c("StanHeaders", "rstan")) ; if (file.exists(".RData")) file.remove(".RData")' 
+
+RUN apt-get install -yq software-properties-common
+RUN add-apt-repository ppa:marutter/rrutter4.0
+RUN add-apt-repository ppa:c2d4u.team/c2d4u4.0+
+RUN apt update
+RUN apt install -yq r-cran-rstan
+# RUN R --vanilla -e 'install.packages("rstan", repos = c("https://mc-stan.org/r-packages/")' && R --vanilla -e 'library(rstan)'
+
+RUN git clone https://github.com/stan-dev/rstan.git 
+#&& \
+#    cd rstan && sh sh_b.sh --no-build-vignettes --no-manual \
+cd StanHeaders && R --vanilla -e "install.packages('./src', dependencies=TRUE, repos = NULL, type='source')"
+#    R --vanilla -e "install.packages('./rstan', dependencies=TRUE, repos = NULL, type='source')"
+
+# # RUN R --vanilla -e 'library(rstan)'
+
+# RUN R --vanilla -e 'devtools::install_github("stan-dev/rstan")' && R --vanilla -e 'library(rstan)'
+
+# # RUN R --vanilla -e 'devtools::install_github("stan-dev/rstantools")' && R --vanilla -e 'library(rstantools)'
+# RUN R --vanilla -e 'devtools::install_github("davidaknowles/leafcutter/leafcutter")' && R --vanilla -e 'library(leafcutter)'
+# RUN R --vanilla -e 'remotes::install_github("jackhump/leafviz")'
+
+# WORKDIR /git/
+# RUN git clone https://github.com/davidaknowles/leafcutter.git
+# RUN git clone https://github.com/jackhump/leafviz.git 
+# WORKDIR /
