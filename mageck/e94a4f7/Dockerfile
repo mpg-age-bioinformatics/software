@@ -13,7 +13,7 @@ RUN apt-get update && apt-get -yq dist-upgrade && \
   apt-get install -yq git build-essential && \
   apt-get clean && rm -rf /var/lib/apt/lists/* 
 
-RUN pip install numpy scipy
+RUN pip install numpy==1.19.5 scipy
 
 RUN git clone https://bitbucket.org/liulab/mageck.git && \
     cd mageck && \
