@@ -37,3 +37,10 @@ RUN racoon_clip -h
 
 WORKDIR /racoon_clip-1.0.7/racoon_clip/workflow/envs
 RUN sed -i '$i\  - pandoc' racoon_R_v0.1.yml
+
+RUN apt-get update \
+ && apt-get install -yq --no-install-recommends \
+ libtiff5 && \
+    apt-get purge && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
