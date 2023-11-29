@@ -10,11 +10,7 @@ RUN apt-get update \
     git \
     gcc \ 
     g++ \
-    ninja-build \
-    pkg-config \
-    libarchive-dev \ 
-    libssl-dev \
-    pandoc \
+    libtiff5 \
     python3-pip && \
     apt-get purge && \
     apt-get clean && \
@@ -37,6 +33,7 @@ RUN racoon_clip -h
 
 WORKDIR /racoon_clip-1.0.7/racoon_clip/workflow/envs
 RUN sed -i '$i\  - pandoc' racoon_R_v0.1.yml
+RUN sed -i '$i\  - r-cairo' racoon_R_v0.1.yml
 
 RUN apt-get update \
  && apt-get install -yq --no-install-recommends \
