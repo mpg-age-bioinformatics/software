@@ -10,6 +10,11 @@ RUN apt-get update \
     git \
     gcc \ 
     g++ \
+    ninja-build \
+    pkg-config \
+    libarchive-dev \ 
+    libssl-dev \
+    pandoc \
     python3-pip && \
     apt-get purge && \
     apt-get clean && \
@@ -28,3 +33,7 @@ ENV PATH /opt/conda/envs/racoon_clip/bin:$PATH
 
 RUN pip install -e .
 RUN racoon_clip -h
+
+
+WORKDIR /racoon_clip-1.0.7/racoon_clip/workflow/envs
+RUN sed -i '$i\  - pandoc' racoon_R_v0.1.yml
