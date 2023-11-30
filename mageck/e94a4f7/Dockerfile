@@ -10,8 +10,8 @@ echo "deb http://security.debian.org/debian-security bullseye-security main cont
 echo "deb-src http://security.debian.org/debian-security bullseye-security main contrib non-free" >> /etc/apt/sources.list
 
 RUN apt-get update && apt-get -yq dist-upgrade && \
-  apt-get install -yq git build-essential wget && \
-  apt-get clean && rm -rf /var/lib/apt/lists/* 
+  apt-get install -yq git build-essential wget libfontconfig1-dev && \
+  apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN pip install numpy==1.19.5 scipy
 
@@ -24,4 +24,28 @@ RUN wget https://downloads.sourceforge.net/project/spacerscoringcrispr/SSC0.1/SS
 
 ENV PATH /SSC0.1/bin:${PATH}
 
-ENTRYPOINT echo "Welcome to MAGeCK Docker" & mageck --version & /bin/bash 
+RUN echo "deb http://cloud.r-project.org/bin/linux/debian bullseye-cran40/" >> /etc/apt/sources.list && \
+  gpg --keyserver keyserver.ubuntu.com --recv-key '95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7' && \
+  gpg --armor --export '95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7' | tee /etc/apt/trusted.gpg.d/cran_debian_key.asc
+
+RUN apt-get update && apt-get -yq dist-upgrade && \
+  apt-get install -yq r-base r-base-dev r-recommended  && \
+  apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN Rscript -e 'install.packages("BiocManager", repos="http://cloud.r-project.org/" )' && Rscript -e 'library(BiocManager)'
+RUN Rscript -e 'BiocManager::install("fgsea")' && Rscript -e 'library(fgsea)'
+RUN Rscript -e 'install.packages("data.table", repos="http://cloud.r-project.org/" )'  && Rscript -e 'library(data.table)'
+RUN Rscript -e 'install.packages("ggplot2", repos="http://cloud.r-project.org/" )' && Rscript -e 'library(ggplot2)'
+RUN Rscript -e 'install.packages("openxlsx", repos="http://cloud.r-project.org/" )' && Rscript -e 'library(openxlsx)'
+
+
+RUN apt-get update && apt-get -yq dist-upgrade && \
+  apt-get install -yq libcurl4-openssl-dev libssl-dev libxml2-dev && \
+  apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN Rscript -e 'BiocManager::install("MAGeCKFlute")' && Rscript -e 'library(MAGeCKFlute)'
+
+# ENTRYPOINT echo "Welcome to MAGeCK Docker" && mageck --version && /bin/bash 
+
+
+# docker build --progress plain -t mageck . 2>&1 | tee build.log
