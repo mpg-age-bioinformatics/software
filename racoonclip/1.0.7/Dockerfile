@@ -24,6 +24,7 @@ WORKDIR /racoon_clip-1.0.7/
 RUN mamba create -n racoon_clip python=3.9.2 pip -y && \
     mamba init  && \
     echo "mamba activate racoon_clip" >> ~/.bashrc
+
 SHELL ["conda", "run", "--no-capture-output", "-n", "racoon_clip", "/bin/bash", "-c"]
 ENV PATH /opt/conda/envs/racoon_clip/bin:$PATH
 
@@ -38,5 +39,7 @@ RUN sed -i '$i\  - r-cairo' racoon_R_v0.1.yml
 WORKDIR /racoon_clip-1.0.7/racoon_clip/workflow/rules
 RUN sed -i '622,646 s/^# //'  Report.rmd
 RUN sed -i '614i\umitools_out = map(umitools_out, ~mutate(.x, measure=modify_if(measure, .p = is_empty, .f = ~NA_character_)))' Report.rmd
+RUN sed -i '72i\print(dir)' Report.rmd
+RUN sed -i '189i\head(fastqc_report_raw)' Report.rmd
 
 WORKDIR /racoon_clip-1.0.7/ 
