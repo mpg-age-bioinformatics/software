@@ -62,6 +62,6 @@ RUN sed -i '614i\umitools_out = map(umitools_out, ~mutate(.x, measure=modify_if(
 WORKDIR /racoon_clip-1.0.7/ 
 
 # Set timezone manually
-# RUN ln -snf /usr/share/zoneinfo/UTC /etc/localtime && echo UTC > /etc/timezone
+RUN ln -snf /usr/share/zoneinfo/UTC /etc/localtime && echo UTC > /etc/timezone
 
 ENTRYPOINT [ "bash", "-c", "source /root/.bashrc && exec \"$@\"", "--" ]
