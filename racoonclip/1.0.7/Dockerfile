@@ -43,3 +43,5 @@ RUN sed -i '72i\print(dir)' Report.rmd
 RUN sed -i '189i\head(fastqc_report_raw)' Report.rmd
 
 WORKDIR /racoon_clip-1.0.7/ 
+
+ENTRYPOINT [ "bash", "-c", "source /root/.bashrc && exec \"$@\"", "--" ]
