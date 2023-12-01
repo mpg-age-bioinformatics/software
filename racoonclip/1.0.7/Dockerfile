@@ -2,6 +2,18 @@ FROM condaforge/miniforge3:23.3.1-1
 
 LABEL maintainer="bioinformatics@age.mpg.de"
 LABEL org.jupyter.service="jupyterhub"
+RUN apt-get update \
+ && apt-get install -yq --no-install-recommends \
+	bzip2 \
+	fonts-liberation \
+    locales && \
+    apt-get purge && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+ENV LANG C.UTF-8
+
+RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+    locale-gen
 
 RUN apt-get update \
  && apt-get install -yq --no-install-recommends \
@@ -11,10 +23,15 @@ RUN apt-get update \
     gcc \ 
     g++ \
     libtiff5 \
+    systemd \
     python3-pip && \
     apt-get purge && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
+ENV LC_ALL en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
 
 RUN wget https://github.com/ZarnackGroup/racoon_clip/archive/refs/tags/v1.0.7.zip
 RUN unzip v1.0.7.zip
@@ -42,7 +59,9 @@ RUN sed -i '614i\umitools_out = map(umitools_out, ~mutate(.x, measure=modify_if(
 # RUN sed -i '72i\print(dir)' Report.rmd
 # RUN sed -i '189i\head(fastqc_report_raw)' Report.rmd
 
-
 WORKDIR /racoon_clip-1.0.7/ 
+
+# Set timezone manually
+# RUN ln -snf /usr/share/zoneinfo/UTC /etc/localtime && echo UTC > /etc/timezone
 
 ENTRYPOINT [ "bash", "-c", "source /root/.bashrc && exec \"$@\"", "--" ]
