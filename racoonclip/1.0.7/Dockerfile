@@ -39,8 +39,8 @@ RUN printf 'channels:\n  - conda-forge\n  - bioconda\n  - defaults\ndependencies
 WORKDIR /racoon_clip-1.0.7/racoon_clip/workflow/rules
 RUN sed -i '622,646 s/^# //'  Report.rmd
 RUN sed -i '614i\umitools_out = map(umitools_out, ~mutate(.x, measure=modify_if(measure, .p = is_empty, .f = ~NA_character_)))' Report.rmd
-RUN sed -i '72i\print(dir)' Report.rmd
-RUN sed -i '189i\head(fastqc_report_raw)' Report.rmd
+# RUN sed -i '72i\print(dir)' Report.rmd
+# RUN sed -i '189i\head(fastqc_report_raw)' Report.rmd
 
 
 WORKDIR /racoon_clip-1.0.7/ 
