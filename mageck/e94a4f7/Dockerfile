@@ -10,10 +10,10 @@ echo "deb http://security.debian.org/debian-security bullseye-security main cont
 echo "deb-src http://security.debian.org/debian-security bullseye-security main contrib non-free" >> /etc/apt/sources.list
 
 RUN apt-get update && apt-get -yq dist-upgrade && \
-  apt-get install -yq git build-essential wget libfontconfig1-dev && \
+  apt-get install -yq git build-essential wget libfontconfig1-dev libcurl4-openssl-dev libssl-dev libxml2-dev && \
   apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN pip install numpy==1.19.5 scipy
+RUN pip install numpy==1.19.5 scipy pandas
 
 RUN git clone https://bitbucket.org/liulab/mageck.git && \
     cd mageck && \
@@ -37,15 +37,8 @@ RUN Rscript -e 'BiocManager::install("fgsea")' && Rscript -e 'library(fgsea)'
 RUN Rscript -e 'install.packages("data.table", repos="http://cloud.r-project.org/" )'  && Rscript -e 'library(data.table)'
 RUN Rscript -e 'install.packages("ggplot2", repos="http://cloud.r-project.org/" )' && Rscript -e 'library(ggplot2)'
 RUN Rscript -e 'install.packages("openxlsx", repos="http://cloud.r-project.org/" )' && Rscript -e 'library(openxlsx)'
-
-
-RUN apt-get update && apt-get -yq dist-upgrade && \
-  apt-get install -yq libcurl4-openssl-dev libssl-dev libxml2-dev && \
-  apt-get clean && rm -rf /var/lib/apt/lists/*
-
 RUN Rscript -e 'BiocManager::install("MAGeCKFlute")' && Rscript -e 'library(MAGeCKFlute)'
 
 # ENTRYPOINT echo "Welcome to MAGeCK Docker" && mageck --version && /bin/bash 
-
 
 # docker build --progress plain -t mageck . 2>&1 | tee build.log
