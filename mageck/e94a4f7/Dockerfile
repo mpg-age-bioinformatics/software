@@ -13,7 +13,7 @@ RUN apt-get update && apt-get -yq dist-upgrade && \
   apt-get install -yq git build-essential wget libfontconfig1-dev libcurl4-openssl-dev libssl-dev libxml2-dev && \
   apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN pip install numpy==1.19.5 scipy pandas
+RUN pip install numpy==1.19.5 scipy pandas openpyxl
 
 RUN git clone https://bitbucket.org/liulab/mageck.git && \
     cd mageck && \
