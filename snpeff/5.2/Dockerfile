@@ -14,6 +14,7 @@ RUN apt-get update && apt-get -yq dist-upgrade && \
   apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN wget https://snpeff.blob.core.windows.net/versions/snpEff_latest_core.zip && \
-  unzip snpEff_latest_core.zip
+  unzip snpEff_latest_core.zip && \
+  cp /snpEff/snpEff.jar .
 
-ENV PATH /snpEff:$PATH
+ENV PATH="/snpEff.jar:${PATH}"
