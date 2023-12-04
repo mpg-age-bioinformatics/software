@@ -22,6 +22,29 @@ WORKDIR /racoon_clip-1.0.8/
 
 RUN conda install --quiet --yes -n base --override-channels -c conda-forge mamba 'python_abi=*=*cp*' && \
     conda create -n racoon_clip python=3.9.2 pip  && \
+    cat << EOL >> /etc/bash.bashrc
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="\$('/opt/conda/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ \$? -eq 0 ]; then
+    eval "\$__conda_setup"
+else
+    if [ -f "/opt/conda/etc/profile.d/conda.sh" ]; then
+        . "/opt/conda/etc/profile.d/conda.sh"
+    else
+        export PATH="/opt/conda/bin:\$PATH"
+    fi
+fi
+unset __conda_setup
+
+if [ -f "/opt/conda/etc/profile.d/mamba.sh" ]; then
+    . "/opt/conda/etc/profile.d/mamba.sh"
+fi
+# <<< conda initialize <<<
+
+EOL && \
+
     echo "conda activate racoon_clip" >> ~/.bashrc
 SHELL ["/bin/bash", "--login", "-c"]
 ENV PATH /opt/conda/envs/racoon_clip/bin:$PATH
