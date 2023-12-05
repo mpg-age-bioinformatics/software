@@ -35,12 +35,12 @@ RUN apt-get update && apt-get -yq dist-upgrade && \
 RUN Rscript -e 'install.packages("BiocManager", repos="http://cloud.r-project.org/" )' && Rscript -e 'library(BiocManager)'
 RUN Rscript -e 'BiocManager::install("fgsea")' && Rscript -e 'library(fgsea)'
 RUN Rscript -e 'install.packages("data.table", repos="http://cloud.r-project.org/" )'  && Rscript -e 'library(data.table)'
-RUN Rscript -e 'install.packages("devtools", repos="http://cloud.r-project.org/" )'  && Rscript -e 'library(devtools)'
-RUN Rscript -e 'devtools::install_version("ggplot2", "3.3.3")' && Rscript -e 'library(ggplot2)'
-# RUN Rscript -e 'install.packages("ggplot2", repos="http://cloud.r-project.org/" )' && Rscript -e 'library(ggplot2)'
+# RUN Rscript -e 'install.packages("devtools", repos="http://cloud.r-project.org/" )'  && Rscript -e 'library(devtools)'
+# RUN Rscript -e 'devtools::install_version("ggplot2", "3.3.3")' && Rscript -e 'library(ggplot2)'
+RUN Rscript -e 'install.packages("ggplot2", repos="http://cloud.r-project.org/" )' && Rscript -e 'library(ggplot2)'
 RUN Rscript -e 'install.packages("openxlsx", repos="http://cloud.r-project.org/" )' && Rscript -e 'library(openxlsx)'
 RUN Rscript -e 'BiocManager::install("MAGeCKFlute")' && Rscript -e 'library(MAGeCKFlute)'
 
 # ENTRYPOINT echo "Welcome to MAGeCK Docker" && mageck --version && /bin/bash 
 
-# docker build --progress plain -t mageck . 2>&1 | tee build.logsys 
+# docker build --progress plain -t mageck . 2>&1 | tee build.log
