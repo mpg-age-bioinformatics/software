@@ -44,7 +44,9 @@ RUN Rscript -e 'BiocManager::install(c("pathview", "biomaRt", "msigdbr", "dendex
 
 RUN git clone https://git.bioconductor.org/packages/MAGeCKFlute
 
-RUN Rscript -e 'devtools::build("/MAGeCKFlute")'
+RUN Rscript -e 'devtools::build("/MAGeCKFlute")' && \
+  Rscript -e 'devtools::install("/MAGeCKFlute")' && \
+  Rscript -e 'library(MAGeCKFlute)'
 
 # RUN Rscript -e 'BiocManager::install("MAGeCKFlute")' && Rscript -e 'library(MAGeCKFlute)'
 
