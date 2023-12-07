@@ -10,7 +10,7 @@ echo "deb http://security.debian.org/debian-security bullseye-security main cont
 echo "deb-src http://security.debian.org/debian-security bullseye-security main contrib non-free" >> /etc/apt/sources.list
 
 RUN apt-get update && apt-get -yq dist-upgrade && \
-  apt-get install -yq git build-essential wget libfontconfig1-dev libcurl4-openssl-dev libssl-dev libxml2-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev && \
+  apt-get install -yq git build-essential wget libfontconfig1-dev libcurl4-openssl-dev libssl-dev libxml2-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev pandoc pandoc-citeproc && \
   apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN pip install numpy==1.19.5 scipy pandas openpyxl
@@ -35,11 +35,20 @@ RUN apt-get update && apt-get -yq dist-upgrade && \
 RUN Rscript -e 'install.packages("BiocManager", repos="http://cloud.r-project.org/" )' && Rscript -e 'library(BiocManager)'
 RUN Rscript -e 'BiocManager::install("fgsea")' && Rscript -e 'library(fgsea)'
 RUN Rscript -e 'install.packages("data.table", repos="http://cloud.r-project.org/" )'  && Rscript -e 'library(data.table)'
-# RUN Rscript -e 'install.packages("devtools", repos="http://cloud.r-project.org/" )'  && Rscript -e 'library(devtools)'
+RUN Rscript -e 'install.packages("devtools", repos="http://cloud.r-project.org/" )'  && Rscript -e 'library(devtools)'
 # RUN Rscript -e 'devtools::install_version("ggplot2", "3.3.3")' && Rscript -e 'library(ggplot2)'
 RUN Rscript -e 'install.packages("ggplot2", repos="http://cloud.r-project.org/" )' && Rscript -e 'library(ggplot2)'
 RUN Rscript -e 'install.packages("openxlsx", repos="http://cloud.r-project.org/" )' && Rscript -e 'library(openxlsx)'
-RUN Rscript -e 'BiocManager::install("MAGeCKFlute")' && Rscript -e 'library(MAGeCKFlute)'
+
+RUN Rscript -e 'BiocManager::install(c("pathview", "biomaRt", "msigdbr", "dendextend", "pheatmap", "sva", "ggrepel", "knitr", "clusterProfiler", "depmap","BiocStyle"), force=TRUE)'
+
+RUN git clone https://git.bioconductor.org/packages/MAGeCKFlute
+
+RUN Rscript -e 'devtools::build("/MAGeCKFlute")' && \
+  Rscript -e 'devtools::install("/MAGeCKFlute")' && \
+  Rscript -e 'library(MAGeCKFlute)'
+
+# RUN Rscript -e 'BiocManager::install("MAGeCKFlute")' && Rscript -e 'library(MAGeCKFlute)'
 
 # ENTRYPOINT echo "Welcome to MAGeCK Docker" && mageck --version && /bin/bash 
 
