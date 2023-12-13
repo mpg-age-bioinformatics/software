@@ -58,6 +58,13 @@ RUN sed -i '622,646 s/^# //'  Report.rmd
 RUN sed -i '614i\umitools_out = map(umitools_out, ~mutate(.x, measure=modify_if(measure, .p = is_empty, .f = ~NA_character_)))' Report.rmd
 # RUN sed -i '72i\print(dir)' Report.rmd
 # RUN sed -i '189i\head(fastqc_report_raw)' Report.rmd
+# RUN sed -i 's/output_format = "html_document")/output_format = "html_document",\\nintermediates_dir=\'./tmp\')\\nunlink(\'./tmp\',recursive=TRUE)/g'  make_report.R
+
+RUN sed -i '1i\report_path <- tempfile(fileext = ".Rmd")' make_report.R
+RUN sed -i '2i\file.copy("report.Rmd", report_path, overwrite = TRUE)' make_report.R
+RUN sed -i '6d' make_report.R
+RUN sed -i '$a\output_format = "html_document",intermediates_dir="./tmp")' make_report.R
+RUN sed -i '$a\unlink("./tmp",recursive=TRUE)' make_report.R
 
 WORKDIR /racoon_clip-1.0.7/ 
 
