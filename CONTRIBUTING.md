@@ -18,6 +18,7 @@ Tag format must be:
 
 eg. `kallisto-0.48.0`, adding tags and commiting eg.:
 ```
+git fetch --tags
 git describe --abbrev=0 --tags # get last tag
 git tag -e -a kallisto-0.48.0 HEAD
 git push
