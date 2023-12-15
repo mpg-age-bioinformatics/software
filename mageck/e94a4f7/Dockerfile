@@ -10,7 +10,7 @@ echo "deb http://security.debian.org/debian-security bullseye-security main cont
 echo "deb-src http://security.debian.org/debian-security bullseye-security main contrib non-free" >> /etc/apt/sources.list
 
 RUN apt-get update && apt-get -yq dist-upgrade && \
-  apt-get install -yq git build-essential wget libfontconfig1-dev libcurl4-openssl-dev libssl-dev libxml2-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev pandoc pandoc-citeproc && \
+  apt-get install -yq git build-essential wget libfontconfig1-dev libcurl4-openssl-dev libssl-dev libxml2-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev pandoc pandoc-citeproc texlive-fonts-extra && \
   apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN pip install numpy==1.19.5 scipy pandas openpyxl matplotlib
