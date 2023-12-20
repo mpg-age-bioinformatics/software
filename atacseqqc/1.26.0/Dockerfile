@@ -10,6 +10,8 @@ RUN Rscript -e 'install.packages("openxlsx", repos="http://cloud.r-project.org/"
 RUN Rscript -e 'library(openxlsx)'
 RUN Rscript -e 'install.packages("BiocManager", repos="http://cloud.r-project.org/" )' 
 RUN Rscript -e 'library(BiocManager)'
+RUN Rscript -e 'install.packages("progress", repos="http://cloud.r-project.org/" )' 
+RUN Rscript -e 'library(progress)'
 
 RUN Rscript -e 'BiocManager::install("TFBSTools")'
 RUN Rscript -e 'library(TFBSTools)'
