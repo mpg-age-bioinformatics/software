@@ -14,3 +14,5 @@ RUN apt-get update && apt-get -yq dist-upgrade && \
   apt-get clean && rm -rf /var/lib/apt/lists/* 
 
 RUN pip3 install macs2==2.2.9.1
+RUN pip3 install openpyxl==3.0.6
+RUN pip3 install pandas==1.2.2
