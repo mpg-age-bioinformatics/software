@@ -10,7 +10,7 @@ echo "deb http://security.debian.org/debian-security bullseye-security main cont
 echo "deb-src http://security.debian.org/debian-security bullseye-security main contrib non-free" >> /etc/apt/sources.list
 
 RUN apt-get update && apt-get -yq dist-upgrade && \
-  apt-get install -yq wget tar pigz curl bzip2 build-essential libncurses-dev zlib1g-dev libbz2-dev liblzma-dev && \
+  apt-get install -yq wget tar pigz curl bzip2 build-essential libncurses-dev zlib1g-dev libbz2-dev liblzma-dev git && \
   apt-get clean && rm -rf /var/lib/apt/lists/* 
 
 
@@ -19,8 +19,7 @@ RUN pip3 install pandas
 RUN pip3 install numpy
 RUN pip3 install HTSeq
 
-RUN wget https://github.com/dieterich-lab/DCC/archive/refs/tags/v0.5.0.tar.gz && \
-  tar -zxvf v0.5.0.tar.gz && \
-  cd DCC-0.5.0  && \
+RUN git clone https://github.com/dieterich-lab/DCC.git && \
+  cd DCC  && \
   python3 setup.py install
 
