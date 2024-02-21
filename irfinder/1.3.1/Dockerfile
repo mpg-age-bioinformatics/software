@@ -10,7 +10,7 @@ echo "deb http://security.debian.org/debian-security bullseye-security main cont
 echo "deb-src http://security.debian.org/debian-security bullseye-security main contrib non-free" >> /etc/apt/sources.list
 
 RUN apt-get update && apt-get -yq dist-upgrade && \
-  apt-get install -yq curl tar git build-essential wget libz-dev && \
+  apt-get install -yq curl tar git build-essential wget rsync libz-dev && \
   apt-get clean && rm -rf /var/lib/apt/lists/* 
  
 RUN wget https://github.com/williamritchie/IRFinder/archive/refs/tags/v1.3.1.tar.gz && \
