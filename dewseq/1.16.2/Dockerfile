@@ -1,5 +1,7 @@
 FROM r-base:4.3.2
 
+LABEL maintainer "bioinformatics@age.mpg.de"
+
 RUN apt-get update && apt-get -yq dist-upgrade && \
   apt-get install -yq build-essential  libcurl4-openssl-dev libxml2-dev  libgsl-dev libssl-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev && \
   apt-get clean && rm -rf /var/lib/apt/lists/*
