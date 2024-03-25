@@ -3,11 +3,11 @@ FROM r-base:4.3.2
 LABEL maintainer "bioinformatics@age.mpg.de"
 
 RUN apt-get update && apt-get -yq dist-upgrade && \
-  apt-get install -yq build-essential  libcurl4-openssl-dev libxml2-dev  libgsl-dev libssl-dev libfontconfig1-dev && \
+  apt-get install -yq build-essential  libcurl4-openssl-dev libxml2-dev  libgsl-dev libssl-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libudunits2-dev && \
   apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # RUN apt-get update && apt-get -yq dist-upgrade && \
-#   apt-get install -yq zlib1g-dev libbz2-dev liblzma-dev libmagickwand-dev libcurl4-gnutls-dev  libharfbuzz-dev libfribidi-dev && \
+#   apt-get install -yq zlib1g-dev libbz2-dev liblzma-dev libmagickwand-dev libcurl4-gnutls-dev   && \
 #   apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN Rscript -e 'install.packages("openxlsx", repos="http://cloud.r-project.org/", dependencies = TRUE)'
