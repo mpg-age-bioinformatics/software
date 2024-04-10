@@ -13,13 +13,7 @@ RUN apt-get update && apt-get -yq dist-upgrade && \
   apt-get install -yq  git && \ 
   apt-get clean && rm -rf /var/lib/apt/lists/* 
 
-RUN git clone git@github.com:mattarnoldbio/alphapickle.git && cd alphapickle && git checkout 0d08bc4
-
-RUN pip3 install click && python -c "import click"
-RUN pip3 install numpy && python -c "import numpy"
-RUN pip3 install pandas && python -c "import pandas"
-RUN pip3 install scipy && python -c "import scipy"
-RUN pip3 install scikit-learn && python -c "from sklearn.linear_model import LinearRegression"
+RUN git clone https://github.com/mattarnoldbio/alphapickle.git && cd alphapickle && git checkout 0d08bc4
 
 RUN pip3 install altgraph=0.17.2
 RUN pip3 install argcomplete=1.12.3
