@@ -32,6 +32,8 @@ RUN Rscript -e 'BiocManager::install("TxDb.Hsapiens.UCSC.hg38.knownGene")'
 RUN Rscript -e 'library(TxDb.Hsapiens.UCSC.hg38.knownGene)'
 RUN Rscript -e 'BiocManager::install("TxDb.Mmusculus.UCSC.mm10.knownGene")'
 RUN Rscript -e 'library(TxDb.Mmusculus.UCSC.mm10.knownGene)'
+RUN Rscript -e 'BiocManager::install("TxDb.Mmusculus.UCSC.mm39.knownGene")'
+RUN Rscript -e 'library(TxDb.Mmusculus.UCSC.mm39.knownGene)'
 RUN Rscript -e 'BiocManager::install("TxDb.Scerevisiae.UCSC.sacCer3.sgdGene")'
 RUN Rscript -e 'library(TxDb.Scerevisiae.UCSC.sacCer3.sgdGene)'
 
