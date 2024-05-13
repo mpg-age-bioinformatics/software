@@ -26,7 +26,7 @@ RUN apt-get update && \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN cp sajr_code /sajr_code
+COPY sajr_code /sajr_code
 
 # Add a directory to the PATH environment variable
 ENV PATH /sajr_code/:$PATH
