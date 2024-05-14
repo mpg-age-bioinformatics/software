@@ -28,5 +28,22 @@ RUN apt-get update && \
 
 COPY sajr_code /sajr_code
 
+RUN Rscript -e 'install.packages("BiocManager", repos="http://cloud.r-project.org/" )' 
+RUN Rscript -e 'library(BiocManager)'
+RUN Rscript -e 'install.packages("openxlsx", repos="http://cloud.r-project.org/", dependencies = TRUE)'
+RUN Rscript -e 'library(openxlsx)'
+RUN Rscript -e 'install.packages("tidyverse", repos="https://cloud.r-project.org/", dependencies = TRUE)'
+RUN Rscript -e 'library(tidyverse)'
+RUN Rscript -e 'BiocManager::install("biomaRt")'
+RUN Rscript -e 'library(biomaRt)'
+RUN Rscript -e 'BiocManager::install("plyr")'
+RUN Rscript -e 'library(plyr)'
+RUN Rscript -e 'BiocManager::install("GenomicRanges")'
+RUN Rscript -e 'library(GenomicRanges)'
+RUN Rscript -e 'install.packages("/sajr_code/SAJR.tar.gz", repos=NULL, dependencies=TRUE, type="source")'
+RUN Rscript -e 'library(SAJR)'
+
+
+
 # Add a directory to the PATH environment variable
 ENV PATH /sajr_code/:$PATH
