@@ -7,4 +7,5 @@ RUN git clone https://github.com/hasindu2008/f5c.git
 WORKDIR /f5c
 RUN git checkout dffda9b && autoreconf && ./scripts/install-hts.sh && ./configure && make zstd=1 && make test && make install
 RUN /bin/bash scripts/install-vbz.sh
+ENV HDF5_PLUGIN_PATH /root/.local/hdf5/lib/plugin 
 CMD ./f5c
