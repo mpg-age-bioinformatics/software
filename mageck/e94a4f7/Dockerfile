@@ -40,11 +40,4 @@ RUN Rscript -e 'install.packages("ggplot2", repos="http://cloud.r-project.org/" 
 RUN Rscript -e 'install.packages("openxlsx", repos="http://cloud.r-project.org/" )' && Rscript -e 'library(openxlsx)'
 
 RUN Rscript -e 'BiocManager::install(c("pathview", "biomaRt", "msigdbr", "dendextend", "pheatmap", "sva", "ggrepel", "knitr", "clusterProfiler", "depmap","BiocStyle"), force=TRUE)'
-
-RUN git clone https://git.bioconductor.org/packages/MAGeCKFlute 
-
-RUN cd /MAGeCKFlute && \
-  git checkout RELEASE_3_12 && \
-  Rscript -e 'devtools::build("/MAGeCKFlute")' && \
-  Rscript -e 'devtools::install("/MAGeCKFlute")' && \
-  Rscript -e 'library(MAGeCKFlute)'
+RUN Rscript -e 'BiocManager::install("MAGeCKFlute")' && Rscript -e 'library(MAGeCKFlute)'
