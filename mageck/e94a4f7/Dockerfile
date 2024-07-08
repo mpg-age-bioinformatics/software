@@ -13,7 +13,7 @@ RUN apt-get update && apt-get -yq dist-upgrade && \
   apt-get install -yq git build-essential wget libfontconfig1-dev libcurl4-openssl-dev libssl-dev libxml2-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev pandoc pandoc-citeproc texlive-fonts-extra && \
   apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN pip install numpy==1.19.5 scipy pandas openpyxl matplotlib
+RUN pip install numpy==1.19.5 scipy pandas openpyxl matplotlib seaborn
 
 RUN git clone https://bitbucket.org/liulab/mageck.git && \
     cd mageck && \
@@ -39,25 +39,5 @@ RUN Rscript -e 'install.packages("devtools", repos="http://cloud.r-project.org/"
 RUN Rscript -e 'install.packages("ggplot2", repos="http://cloud.r-project.org/" )' && Rscript -e 'library(ggplot2)'
 RUN Rscript -e 'install.packages("openxlsx", repos="http://cloud.r-project.org/" )' && Rscript -e 'library(openxlsx)'
 
-# RUN Rscript -e 'BiocManager::install(c("pathview", "biomaRt", "msigdbr", "dendextend", "pheatmap", "sva", "ggrepel", "knitr", "clusterProfiler", "depmap","BiocStyle"), force=TRUE)'
-# RUN Rscript -e 'BiocManager::install("MAGeCKFlute")' && Rscript -e 'library(MAGeCKFlute)'
-
-# COPY AJ02_Lib1_Lib2.gene_summary.txt /AJ02_Lib1_Lib2.gene_summary.txt
-# COPY AJ02_Lib1_Lib2.sgrna_summary.txt /AJ02_Lib1_Lib2.sgrna_summary.txt
-# COPY ./.command.sh /.command.sh
-
-# RUN git clone https://git.bioconductor.org/packages/MAGeCKFlute 
-
-# RUN cd /MAGeCKFlute && \
-#   git checkout RELEASE_3_12 && \
-#   Rscript -e 'devtools::build("/MAGeCKFlute")' && \
-#   Rscript -e 'devtools::install("/MAGeCKFlute")' && \
-#   Rscript -e 'library(MAGeCKFlute)'
-
-# RUN mkdir /flute_out/
-
-# RUN /.command.sh
-
-# ENTRYPOINT echo "Welcome to MAGeCK Docker" && mageck --version && /bin/bash 
-
-# docker build --progress plain -t mageck . 2>&1 | tee build.log
+RUN Rscript -e 'BiocManager::install(c("pathview", "biomaRt", "msigdbr", "dendextend", "pheatmap", "sva", "ggrepel", "knitr", "clusterProfiler", "depmap","BiocStyle"), force=TRUE)'
+RUN Rscript -e 'BiocManager::install("MAGeCKFlute")' && Rscript -e 'library(MAGeCKFlute)'
