@@ -50,5 +50,3 @@ RUN wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/hg19ToHg38.over
 
 # Add LiftOver to PATH
 ENV PATH="/opt/liftover:${PATH}"
-
-ENTRYPOINT ["liftOver"]
