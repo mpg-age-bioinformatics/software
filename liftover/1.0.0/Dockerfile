@@ -1,17 +1,7 @@
-# Use Debian Bullseye Slim as the parent image
-FROM debian:bullseye-slim
+FROM --platform=linux/amd64 ubuntu:22.04
 
 LABEL maintainer="bioinformatics@age.mpg.de"
 
-# Add Debian package repositories
-RUN echo "deb http://deb.debian.org/debian/ bullseye main contrib non-free" >> /etc/apt/sources.list && \
-    echo "deb-src http://deb.debian.org/debian/ bullseye main contrib non-free" >> /etc/apt/sources.list && \
-    echo "deb http://deb.debian.org/debian/ bullseye-updates main contrib non-free" >> /etc/apt/sources.list && \
-    echo "deb-src http://deb.debian.org/debian/ bullseye-updates main contrib non-free" >> /etc/apt/sources.list && \
-    echo "deb http://security.debian.org/debian-security bullseye-security main contrib non-free" >> /etc/apt/sources.list && \
-    echo "deb-src http://security.debian.org/debian-security bullseye-security main contrib non-free" >> /etc/apt/sources.list
-
-# Update package repositories and install dependencies
 RUN apt-get update && \
     apt-get -yq dist-upgrade && \
     apt-get install -yq \
@@ -28,10 +18,13 @@ RUN apt-get update && \
     libtool \
     libbz2-dev \
     liblzma-dev \
+    libcurl4 \
     libcurl4-gnutls-dev \
     libssl-dev \
     zlib1g-dev \
-    libgsl-dev && \
+    libgsl-dev \
+    libc6 \
+    libc6-dev \
     gzip && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
@@ -46,7 +39,6 @@ RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/liftOver && \
 # Example of downloading a chain file (you can add more as needed)
 RUN wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/hg19ToHg38.over.chain.gz && \
     gunzip hg19ToHg38.over.chain.gz
-
 
 # Add LiftOver to PATH
 ENV PATH="/opt/liftover:${PATH}"
