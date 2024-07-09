@@ -32,6 +32,7 @@ RUN apt-get update && \
     libssl-dev \
     zlib1g-dev \
     libgsl-dev && \
+    gzip && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -43,7 +44,11 @@ RUN wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/liftOver && \
     chmod +x liftOver
 
 # Example of downloading a chain file (you can add more as needed)
-RUN wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/hg19ToHg38.over.chain.gz
+RUN wget http://hgdownload.soe.ucsc.edu/goldenPath/hg19/liftOver/hg19ToHg38.over.chain.gz && \
+    gunzip hg19ToHg38.over.chain.gz
+
 
 # Add LiftOver to PATH
 ENV PATH="/opt/liftover:${PATH}"
+
+ENTRYPOINT ["liftOver"]
