@@ -23,4 +23,6 @@ RUN echo "cd /CHyMErA-Net && source activate cas12a" >> ~/.bashrc
 RUN sed -i 's/import os/#import os/' /opt/conda/envs/cas12a/lib/python3.7/site-packages/distutils-precedence.pth
 
 # Activate and python setup
-RUN /bin/bash -c "source activate cas12a && pip install protobuf==3.20.3 && cd /CHyMErA-Net && python setup.py install"
+RUN /bin/bash -c "source activate cas12a && pip install protobuf==3.20.3 && pip install h5py==2.10.0 && cd /CHyMErA-Net && python setup.py install"
+
+# Activate cas12a environment if it is not automatically done: `source activate cas12a`
