@@ -7,4 +7,4 @@ RUN curl -o /cellranger-9.0.0.tar.gz "https://cf.10xgenomics.com/releases/cell-e
 
 RUN tar -xzvf /cellranger-9.0.0.tar.gz
 
-ENV PATH="/cellranger-9.0.0:${PATH}" 
+ENV PATH "/cellranger-9.0.0:${PATH}"
