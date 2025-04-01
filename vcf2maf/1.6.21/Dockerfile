@@ -43,6 +43,6 @@ LABEL maintainer="Cyriac Kandoth <ckandoth@gmail.com>"
 
 COPY --from=builder /install_root /
 COPY --from=builder /usr/local /usr/local
-COPY data /opt/data
+#COPY data /opt/data
 COPY *.pl /opt/
 WORKDIR /opt
