@@ -2,7 +2,7 @@ FROM mskcc/vcf2maf:1.6.17
 
 # Set environment variables
 ENV VCF2MAF_URL="https://raw.githubusercontent.com/mskcc/vcf2maf/v1.6.21/vcf2maf.pl"
-ENV VCF2MAF_PATH="/usr/local/bin/vcf2maf-1.6.21.pl"
+ENV VCF2MAF_PATH="/usr/bin/vcf2maf-1.6.21.pl"
 
 # Download the new version of vcf2maf.pl (v1.6.21)
 RUN curl -L -o $VCF2MAF_PATH $VCF2MAF_URL && \
