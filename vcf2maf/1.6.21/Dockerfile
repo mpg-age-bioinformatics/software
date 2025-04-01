@@ -1,7 +1,7 @@
 FROM clearlinux:latest AS builder
 
 # Install a minimal versioned OS into /install_root, and bundled tools if any
-ENV CLEAR_VERSION=41780
+ENV CLEAR_VERSION=43160
 RUN swupd os-install --no-progress --no-boot-update --no-scripts \
     --version ${CLEAR_VERSION} \
     --path /install_root \
