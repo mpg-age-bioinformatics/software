@@ -33,8 +33,8 @@ RUN conda create -y -p /usr/local && \
     ucsc-liftover==${LIFTOVER_VERSION}
 
 # Download vcf2maf v1.6.21 from GitHub
-RUN curl -L -o /opt/vcf2maf.pl https://raw.githubusercontent.com/mskcc/vcf2maf/v1.6.21/vcf2maf.pl && \
-    chmod +x /opt/vcf2maf.pl
+RUN curl -L -o /opt/vcf2maf.pl https://raw.githubusercontent.com/mskcc/vcf2maf/v1.6.21/vcf2maf.pl
+RUN chmod +x /opt/vcf2maf.pl
 
 # Deploy the minimal OS and tools into a clean target layer
 FROM scratch
