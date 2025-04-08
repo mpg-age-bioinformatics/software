@@ -16,5 +16,5 @@ RUN apt-get update && apt-get install -y \
 ENV R_LIBS_USER=/usr/local/lib/R/site-library
 
 RUN R -e "if (!requireNamespace('BiocManager', quietly = TRUE)) install.packages('BiocManager')"
-RUN R -e "BiocManager::install(c('Rhtslib', 'Rsamtools', 'GenomicAlignments', 'rtracklayer', 'BSgenome', 'Biostrings', 'GenomicRanges'))"
+RUN R -e "BiocManager::install(c('Rhtslib', 'Rsamtools', 'GenomicAlignments', 'rtracklayer', 'BSgenome', 'Biostrings', 'GenomicRanges', 'BSgenomeForge'))"
 
