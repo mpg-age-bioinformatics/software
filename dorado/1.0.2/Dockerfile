@@ -1,0 +1,2 @@
+FROM ontresearch/dorado@sha0fe401d8dfb4739b6904a57392ba2566d086d180
+# FROM mpgagebioinformatics/dorado:sha0fe401d8dfb4739b6904a57392ba2566d086d180
