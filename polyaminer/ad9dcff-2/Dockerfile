@@ -10,6 +10,8 @@ RUN apt-get -o Acquire::Check-Valid-Until=false install -y --no-install-recommen
       fastp \
       bowtie2 \
       samtools \
+      umi-tools \
+      pigz \
       subread \
       r-base \
  && rm -rf /var/lib/apt/lists/*
